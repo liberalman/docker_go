@@ -1,47 +1,28 @@
 package main
 
 import (
-    "log"
+    "github.com/sirupsen/logrus"
+    "github.com/urfave/cli"
     "os"
-    "os/exec"
-    "syscall"
 )
 
-func main() {
-    cmd := exec.Command("sh")
-    cmd.SysProcAttr = &syscall.SysProcAttr{
-        // 隔离 uts,ipc,pid,mount,user,network
-        Cloneflags: syscall.CLONE_NEWUTS |
-            syscall.CLONE_NEWIPC |
-            syscall.CLONE_NEWPID |
-            syscall.CLONE_NEWNS |
-            syscall.CLONE_NEWUSER |
-            syscall.CLONE_NEWNET,
-        // 设置容器的UID和GID
-        UidMappings: []syscall.SysProcIDMap{
-            {
-                // 容器的UID
-                ContainerID: 1,
-                // 宿主机的UID
-                HostID: 0,
-                Size:   1,
-            },
-        },
-        GidMappings: []syscall.SysProcIDMap{
-            {
-                // 容器的GID
-                ContainerID: 1,
-                // 宿主机的GID
-                HostID: 0,
-                Size:   1,
-            },
-        },
-    }
-    cmd.Stdin = os.Stdin
-    cmd.Stdout = os.Stdout
-    cmd.Stderr = os.Stderr
+const usage = `docker_go`
 
-    if err := cmd.Run(); err != nil {
-        log.Fatal(err)
+func main() {
+    app := cli.NewApp()
+    app.Name = "docker_go"
+    app.Usage = usage
+
+    app.Commands = []cli.Command{
+        runCommand,
+        initCommand,
+    }
+    app.Before = func(context *cli.Context) error {
+        logrus.SetFormatter(&logrus.JSONFormatter{})
+        logrus.SetOutput(os.Stdout)
+        return nil
+    }
+    if err := app.Run(os.Args); err != nil {
+        logrus.Fatal(err)
     }
 }

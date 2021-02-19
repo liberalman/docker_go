@@ -22,7 +22,7 @@ func Run(cmdArray []string, tty bool, res *subsystem.ResourceConfig) {
         return
     }
     // 添加资源限制
-    cgroupMananger := cgroups.NewCGroupManager("go-docker")
+    cgroupMananger := cgroups.NewCGroupManager("docker_go")
     // 删除资源限制
     defer cgroupMananger.Destroy()
     // 设置资源限制

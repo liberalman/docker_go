@@ -2,7 +2,6 @@ package tests
 
 import (
 	// system package
-    "fmt"
 	"testing"
 
 	// item package
@@ -17,12 +16,19 @@ func TestRecordContainerInfo(t *testing.T) {
 	}
 }
 
+func TestNewWorkSpace(t *testing.T) {
+	err := container.NewWorkSpace("container", "mycontainer", "busybox")
+	if nil != err {
+		t.Errorf("record container info, err: %v", err)
+	}
+}
+
 func TestDeleteContainerInfo(t *testing.T) {
 	container.DeleteContainerInfo("mycontainer")
 }
 
 func TestGenContainerID(t *testing.T) {
-    fmt.Println(container.GenContainerID(10))
+    t.Logf("id: %s\n", container.GenContainerID(10))
 }
 
 func TestListContainerInfo(t *testing.T) {

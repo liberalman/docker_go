@@ -71,6 +71,7 @@ func createWriteLayer(containerName string) error {
     return nil
 }
 
+// 创建挂载点
 func CreateMountPoint(containerName, imageName string) error {
     mntPath := path.Join(common.MntPath, containerName)
     _, err := os.Stat(mntPath)

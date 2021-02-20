@@ -8,23 +8,25 @@ import (
 	"docker_go/container"
 )
 
+const CONTAINER_NAME = "test"
+
 func TestRecordContainerInfo(t *testing.T) {
 	// 记录容器信息
-	err := container.RecordContainerInfo(1234, []string{"ls"}, "mycontainer", "5678")
+	err := container.RecordContainerInfo(1234, []string{"ls"}, CONTAINER_NAME, "5678")
 	if nil != err {
 		t.Errorf("record container info, err: %v", err)
 	}
 }
 
 func TestNewWorkSpace(t *testing.T) {
-	err := container.NewWorkSpace("container", "mycontainer", "busybox")
+	err := container.NewWorkSpace("container", CONTAINER_NAME, "busybox")
 	if nil != err {
 		t.Errorf("record container info, err: %v", err)
 	}
 }
 
 func TestDeleteContainerInfo(t *testing.T) {
-	container.DeleteContainerInfo("mycontainer")
+	container.DeleteContainerInfo(CONTAINER_NAME)
 }
 
 func TestGenContainerID(t *testing.T) {
@@ -36,10 +38,10 @@ func TestListContainerInfo(t *testing.T) {
 }
 
 func TestStopContainer(t *testing.T) {
-	container.StopContainer("mycontainer")
+	container.StopContainer(CONTAINER_NAME)
 }
 
 func TestRemoveContainer(t *testing.T) {
-	container.RemoveContainer("mycontainer")
+	container.RemoveContainer(CONTAINER_NAME)
 }
 

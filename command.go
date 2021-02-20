@@ -2,6 +2,7 @@ package main
 
 import (
     "docker_go/common"
+    "docker_go/network"
     "fmt"
     "os"
 
@@ -176,5 +177,46 @@ var removeCommand = cli.Command{
         containerName := context.Args().Get(0)
         container.RemoveContainer(containerName)
         return nil
+    },
+}
+
+var networkCommand = cli.Command{
+    Name: "network",
+    Usage: "container network commands",
+    Subcommands: []cli.Command{
+        {
+            Name: "create",
+            Usage: "create a container network",
+            Flags: []cli.Flag{
+                cli.StringFlag{
+                    Name: "driver",
+                    Usage: "network driver",
+                },
+                cli.StringFlag{
+                    Name:  "subnet",
+                    Usage: "subnet cidr",
+                },
+            },
+            Action: func(context *cli.Context) error {
+                if len(context.Args()) < 1 {
+                    return fmt.Errorf("Missing network name")
+                }
+                err := network.Init()
+                if err != nil {
+                    logrus.Errorf("network init failed, err: %v", err)
+                    return err
+                }
+
+                // 创建网络
+                err = network.CreateNetwork(
+                    context.String("driver"),
+                    context.String("subnet"),
+                    context.Args()[0])
+                if err != nil {
+                    return fmt.Errorf("create network error: %+v", err)
+                }
+                return nil
+            },
+        },
     },
 }

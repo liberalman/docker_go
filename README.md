@@ -63,7 +63,7 @@ tar -xvf busybox.tar -C busybox/
 go build .
 
 # 启动一个容器, busybox为镜像名，存放在 /root/busybox.tar
-./go-docker run -ti --name test busybox sh
+./docker_go run -ti --name test busybox sh
 
 # 后台启动
 ./go-docker run -d --name test busybox sh
